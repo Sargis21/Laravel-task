@@ -1,12 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 11/9/2019
- * Time: 5:33 PM
- */
+use App\Image;
 
-class File
-{
+        if($request->hasFile('photo')):
+            foreach ($files = $request->file('photo') as  $file)
+            {
+                $paths[] = $file->store('images');
+            }
+            foreach ($paths as $path):
+                Image::create([
+                'product_id'=> isset($product) ? $product->id : $item->id,
+                'img'=>$path
+            ]);
+            endforeach;
+        endif;
 
-}
+

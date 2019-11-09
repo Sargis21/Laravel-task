@@ -15,6 +15,7 @@ class ProductController extends Controller
 
     public function index()
     {
+
         $items = Product::with('users','images')->orderBy('id', 'desc')->paginate(5);
         return view('product.index',compact('items'));
     }
@@ -35,19 +36,8 @@ class ProductController extends Controller
             $item->users()->attach($request->input('users'));
         endif;
 
-        if($request->hasFile('photo')):
-            $paths = []; $files = $request->file('photo');
-            foreach ($files as $key=> $file)
-            {
-                $fileName = 'product-'.time().'.'.$file->getClientOriginalExtension();
-                $paths[] = $file->storeAs('images',$key.$fileName);
-            }
-            foreach ($paths as $path): Image::create([
-                'product_id'=>$item->id,
-                'img'=>$path
-            ]);
-            endforeach;
-        endif;
+        // connection adding photo logic
+        include base_path()."/inc/File.php";
 
         return redirect()->route('product.show',$item);
     }
@@ -74,25 +64,13 @@ class ProductController extends Controller
         if ($request->users): $product->users()->attach($request->users);
         endif;
 
-        if($request->hasFile('photo')):
-            $paths = [];
-            $files = $request->file('photo');
-            foreach ($files as $key=> $file)
-            {
-                $fileName = 'product-'.time().'.'.$file->getClientOriginalExtension();
-                $paths[] = $file->storeAs('images',$key.$fileName);
-            }
-            foreach ($paths as $path): Image::create([
-                'product_id'=>$product->id,
-                'img'=>$path
-            ]);
-            endforeach;
-        endif;
+        include base_path()."/inc/File.php";
+
 
         if ($request->img){
             foreach ($request->img as $id) {
-                Image::destroy($id);
-                Storage::delete($request->imgName);
+                Image::where('img',$id)->delete();
+                Storage::delete($id);
             }
         }
         return redirect()->route('product.show',$product);

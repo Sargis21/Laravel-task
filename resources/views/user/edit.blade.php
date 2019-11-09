@@ -17,8 +17,7 @@
                     <p>Delete Photo</p>
                     @foreach($user->images as $img)
                         <div style="display: inline-flex" class="form-check">
-                            <input value="{{$img->img}}" name="imgName[]"  type="hidden" class="form-check-input" id="images">
-                            <input value="{{$img->id}}" name="img[]"  type="checkbox" class="form-check-input" id="images{{$img->id}}">
+                            <input value="{{$img->img}}" name="img[]"  type="checkbox" class="form-check-input" id="images{{$img->id}}">
                             <label class="form-check-label" for="images{{$img->id}}"><img width="50" src="{{asset($img->img)}}" alt="user"></label>
                         </div>
                     @endforeach

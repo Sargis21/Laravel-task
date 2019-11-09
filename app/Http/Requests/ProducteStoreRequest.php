@@ -26,7 +26,7 @@ class ProducteStoreRequest extends FormRequest
         return [
             'name'=>'required|string|max:50|min:3',
             'description'=>'required|string|max:150|min:5',
-            'price'=>'numeric|required|min:1|max:9|between:0,99.99',
+            'price'=>'numeric|required|min:1|max:999',
             'photo'=>'required',
         ];
     }

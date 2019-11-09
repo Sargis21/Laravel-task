@@ -34,11 +34,11 @@ class Repository
     {
         $item = $this->model::create($request->only('name'));
         if($request->input('products')): $item->products()->attach($request->input('products'));endif;
-        if($request->hasFile('photo')):$paths = []; $files = $request->file('photo');
-            foreach ($files as $key=> $file)
+
+        if($request->hasFile('photo')):
+            foreach ($request->file('photo') as $file)
             {
-                $fileName = 'user-'.time().'.'.$file->getClientOriginalExtension();
-                $paths[] = $file->storeAs('images',$key.$fileName);
+                $paths[] = $file->store('images');
             }
             foreach ($paths as $path): Image::create([
                     'user_id'=>$item->id,
@@ -61,11 +61,10 @@ class Repository
         $user->products()->detach();
         if ($request->products): $user->products()->attach($request->products); endif;
 
-        if($request->hasFile('photo')): $paths = []; $files = $request->file('photo');
-            foreach ($files as $key=> $file)
+        if($request->hasFile('photo')):
+            foreach ($request->file('photo') as $file)
             {
-                $fileName = 'profile-'.time().'.'.$file->getClientOriginalExtension();
-                $paths[] = $file->storeAs('images',$key.$fileName);
+                $paths[] = $file->store('images');
             }
             foreach ($paths as $path): Image::create([
                     'user_id'=>$user->id,
@@ -76,8 +75,8 @@ class Repository
 
         if ($request->img){
             foreach ($request->img as $id) {
-                $img[] = Image::destroy($id);
-                Storage::delete($request->imgName);
+                Image::where('img',$id)->delete();
+                Storage::delete($id);
             }
         }
         return redirect()->route('user.show',$user);
