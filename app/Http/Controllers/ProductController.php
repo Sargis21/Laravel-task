@@ -73,6 +73,7 @@ class ProductController extends Controller
                 Storage::delete($id);
             }
         }
+
         return redirect()->route('product.show',$product);
     }
 
