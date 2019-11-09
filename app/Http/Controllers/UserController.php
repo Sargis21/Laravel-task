@@ -59,4 +59,3 @@ class UserController extends Controller
         return $this->model->delete($request, $user);
     }
 }
-

@@ -66,7 +66,6 @@ class ProductController extends Controller
 
         include base_path()."/inc/File.php";
 
-
         if ($request->img){
             foreach ($request->img as $id) {
                 Image::where('img',$id)->delete();

@@ -15,4 +15,3 @@ use App\Image;
         endif;
 
 
-
