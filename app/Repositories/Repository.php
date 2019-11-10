@@ -38,13 +38,10 @@ class Repository
         if($request->hasFile('photo')):
             foreach ($request->file('photo') as $file)
             {
-                $paths[] = $file->store('images');
-            }
-            foreach ($paths as $path): Image::create([
-                    'user_id'=>$item->id,
-                    'img'=>$path
+                $item->images()->create([
+                    'img' => $file->store('images')
                 ]);
-            endforeach;
+            }
         endif;
 
         return redirect()->route('user.show',$item);
@@ -64,31 +61,29 @@ class Repository
         if($request->hasFile('photo')):
             foreach ($request->file('photo') as $file)
             {
-                $paths[] = $file->store('images');
-            }
-            foreach ($paths as $path): Image::create([
-                    'user_id'=>$user->id,
-                    'img'=>$path
+                $user->images()->create([
+                    'img' => $file->store('images')
                 ]);
-            endforeach;
+            }
         endif;
 
         if ($request->img){
-            foreach ($request->img as $id) {
-                Image::where('img',$id)->delete();
-                Storage::delete($id);
+            foreach ($request->img as $imageName) {
+                $user->images()->where('img',$imageName)->delete();
+                Storage::delete($imageName);
             }
         }
         return redirect()->route('user.show',$user);
     }
 
 
-    public function delete(Request $request, User $user)
+    public function delete(User $user)
     {
-        $user->delete();
+        Storage::delete($user->images()->pluck('img')->toArray());
         $user->products()->detach();
         $user->images()->delete();
-        Storage::delete($request->imgName);
+        $user->delete();
+
         return redirect()->route('user.index');
     }
 

@@ -15,7 +15,7 @@ class User extends Model
 
     public function images()
     {
-        return $this->hasMany('App\Image');
+        return $this->morphMany('App\Image','imageable');
     }
 
     public function getNameAttribute($value)

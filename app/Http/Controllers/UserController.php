@@ -54,8 +54,8 @@ class UserController extends Controller
     }
 
 
-    public function destroy(Request $request, User $user)
+    public function destroy(User $user)
     {
-        return $this->model->delete($request, $user);
+        return $this->model->delete( $user);
     }
 }
